@@ -18,7 +18,7 @@ final class MicroserviceControllerTest extends TestCase
             'url' => 'http://localhost:8080',
         ];
 
-        Cache::add(GlobalValues::SERVICE_LIST_KEY, [$service]);
+        Cache::add(self::SERVICE_LIST_KEY, [$service]);
         $response = self::get($this->getUrl());
         $response->assertResponseOk();
         $response->seeJsonEquals([$service]);
@@ -42,6 +42,9 @@ final class MicroserviceControllerTest extends TestCase
 
         $response = self::post($this->getUrl(), $data);
         $response->assertResponseOk();
+        $result = Cache::get(self::SERVICE_LIST_KEY);
+        self::assertCount(1, $result);
+        self::assertContains($data, $result);
     }
 
     private function getUrl(): string
