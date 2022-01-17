@@ -24,4 +24,15 @@ class LaravelCacheRepository implements CacheRepository
             $serviceList,
         ));
     }
+
+    public function saveMicroservice(Microservice $microservice): void
+    {
+        $serviceList = [];
+        if(Cache::has(self::SERVICE_LIST_KEY)) {
+            $serviceList = Cache::get(self::SERVICE_LIST_KEY);
+        }
+
+        $serviceList[] = $microservice->toArray();
+        Cache::put(self::SERVICE_LIST_KEY, $serviceList);
+    }
 }

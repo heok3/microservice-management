@@ -35,4 +35,43 @@ final class LaravelCacheRepositoryTest extends TestCase
         self::assertEquals($service['id'], $microservice->getId());
         self::assertEquals($service['url'], $microservice->getUrl());
     }
+
+    /** @test */
+    public function it_can_register_first_microservice(): void
+    {
+        $microservice = new Microservice(
+            id: 'service_id',
+            url: 'http://localhost:8080',
+        );
+
+        $repo = new LaravelCacheRepository();
+        $result = Cache::get(GlobalValues::SERVICE_LIST_KEY);
+        self::assertEmpty($result);
+        $repo->saveMicroservice($microservice);
+        $result = Cache::get(GlobalValues::SERVICE_LIST_KEY);
+        self::assertCount(1, $result);
+        self::assertContains($microservice->toArray(), $result);
+    }
+
+    /** @test */
+    public function it_can_register_a_microservice(): void
+    {
+        $firstService = new Microservice(
+            id: 'first_service',
+            url: 'http://localhost:8080',
+        );
+
+        $secondService = new Microservice(
+            id: 'second_service',
+            url: 'http://localhost:8000',
+        );
+
+        Cache::put(GlobalValues::SERVICE_LIST_KEY, [$firstService->toArray()]);
+        $repo = new LaravelCacheRepository();
+        $repo->saveMicroservice($secondService);
+        $result = Cache::get(GlobalValues::SERVICE_LIST_KEY);
+        self::assertCount(2, $result);
+        self::assertContains($firstService->toArray(), $result);
+        self::assertContains($secondService->toArray(), $result);
+    }
 }

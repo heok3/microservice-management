@@ -32,6 +32,18 @@ final class MicroserviceControllerTest extends TestCase
         $response->seeJsonEquals([]);
     }
 
+    /** @test */
+    public function client_can_register_as_a_microservice(): void
+    {
+        $data = [
+            'id' => 'service_id',
+            'url' => 'http://localhost:8080',
+        ];
+
+        $response = self::post($this->getUrl(), $data);
+        $response->assertResponseOk();
+    }
+
     private function getUrl(): string
     {
         return '/api/microservices';

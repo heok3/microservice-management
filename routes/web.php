@@ -19,4 +19,5 @@ $router->get('/', function () use ($router) {
 
 $router->group(['namespace' => '\Infrastructure\API'], function () use ($router) {
     $router->get('/api/microservices', 'MicroserviceController@index');
+    $router->post('/api/microservices', 'MicroserviceController@store');
 });

@@ -18,6 +18,14 @@ class Microservice
         );
     }
 
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'url' => $this->url,
+        ];
+    }
+
     /**
      * @return string
      */
