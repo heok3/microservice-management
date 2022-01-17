@@ -19,9 +19,9 @@ class MicroserviceController
     {
         $registerMicroservice->execute(new Microservice(
             id: $request->input('id'),
-            url: $request->input('url'),
+            url: $request->getClientIp(),
         ));
 
-        return new Response(204);
+        return new Response([],204);
     }
 }

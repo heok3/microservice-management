@@ -35,16 +35,19 @@ final class MicroserviceControllerTest extends TestCase
     /** @test */
     public function client_can_register_as_a_microservice(): void
     {
-        $data = [
-            'id' => 'service_id',
-            'url' => 'http://localhost:8080',
-        ];
-
-        $response = self::post($this->getUrl(), $data);
-        $response->assertResponseOk();
+        $serviceId = 'service_id';
+        $response = $this->post($this->getUrl(), ['id' => $serviceId]);
+        $response->assertResponseStatus(204);
         $result = Cache::get(self::SERVICE_LIST_KEY);
         self::assertCount(1, $result);
-        self::assertContains($data, $result);
+        $expected = [
+            'id' => $serviceId,
+            // It's always localhost
+            // Go to integration test for different url
+            'url' => '127.0.0.1',
+        ];
+
+        self::assertContains($expected, $result);
     }
 
     private function getUrl(): string
