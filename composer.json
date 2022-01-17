@@ -12,12 +12,14 @@
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
+        "laravel/tinker": "^2.7",
         "mockery/mockery": "^1.3.1",
         "phpunit/phpunit": "^9.5.10",
         "vimeo/psalm": "^4.18"
     },
     "autoload": {
         "psr-4": {
+            "Configuration\\": "config",
             "Domain\\": "app/Domain",
             "Infrastructure\\": "app/Infrastructure",
             "Application\\": "app/Application"
