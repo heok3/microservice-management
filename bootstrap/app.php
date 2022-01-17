@@ -93,6 +93,10 @@ $app->configure('app');
 
 $app->register(Infrastructure\Provider\MicroserviceServiceProvider::class);
 
+if(env('APP_ENV') === 'local') {
+    $app->register(\Laravel\Tinker\TinkerServiceProvider::class);
+}
+
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
