@@ -30,4 +30,24 @@ final class MicroservicesTest extends TestCase
         $microservices = Microservices::fromArray([]);
         self::assertInstanceOf(Microservices::class, $microservices);
     }
+
+    /** @test */
+    public function it_can_check_if_there_is_a_microservice_with_given_url(): void
+    {
+        $microserviceA = new Microservice(
+            id: 'service_a',
+            url: '123.123.123.123',
+        );
+
+        $microserviceB = new Microservice(
+            id: 'service_b',
+            url: '222.222.222.222',
+        );
+
+        $anyUrl = '111.111.111.111';
+        $microservices = Microservices::fromArray([$microserviceA, $microserviceB]);
+        self::assertTrue($microservices->hasUrl($microserviceB->getUrl()));
+        self::assertFalse($microservices->hasUrl($anyUrl));
+    }
+
 }

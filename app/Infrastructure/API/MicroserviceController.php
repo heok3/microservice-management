@@ -3,6 +3,8 @@
 namespace Infrastructure\API;
 
 use Application\ListMicroservice;
+use Application\MicroserviceIdAlreadyRegisteredException;
+use Application\MicroserviceUrlAlreadyRegisteredException;
 use Application\RegisterMicroservice;
 use Domain\Microservice;
 use Illuminate\Http\Request;
@@ -17,11 +19,17 @@ class MicroserviceController
 
     public function store(Request $request, RegisterMicroservice $registerMicroservice): Response
     {
-        $registerMicroservice->execute(new Microservice(
-            id: $request->input('id'),
-            url: $request->getClientIp(),
-        ));
+        try {
+            $registerMicroservice->execute(new Microservice(
+                id: $request->input('id'),
+                url: $request->getClientIp(),
+            ));
 
-        return new Response([],204);
+            return new Response([], 204);
+        } catch (
+            MicroserviceIdAlreadyRegisteredException
+            |MicroserviceUrlAlreadyRegisteredException $e) {
+            return new Response($e->getErrorArray(), 422);
+        }
     }
 }

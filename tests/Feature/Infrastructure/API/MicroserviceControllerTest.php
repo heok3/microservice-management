@@ -50,6 +50,48 @@ final class MicroserviceControllerTest extends TestCase
         self::assertContains($expected, $result);
     }
 
+    /** @test */
+    public function same_url_cannot_register(): void
+    {
+        $cache = [
+            'id' => 'first_service',
+            'url' => '127.0.0.1',
+        ];
+
+        $serviceId = 'service_id';
+        Cache::put(self::SERVICE_LIST_KEY, [$cache]);
+        $response = $this->json('POST', $this->getUrl(), ['id' => $serviceId]);
+        $response->assertResponseStatus(422);
+        $response->seeJsonContains([
+            'error' => 'url',
+            'detail' => $cache['url'],
+        ]);
+        $result = Cache::get(self::SERVICE_LIST_KEY, [$cache]);
+        self::assertCount(1, $result);
+        self::assertContains($cache, $result);
+    }
+
+    /** @test */
+    public function same_id_cannot_register(): void
+    {
+        $cache = [
+            'id' => 'service_id',
+            'url' => '123.123.123.123',
+        ];
+
+        $serviceId = 'service_id';
+        Cache::put(self::SERVICE_LIST_KEY, [$cache]);
+        $response = $this->json('POST', $this->getUrl(), ['id' => $serviceId]);
+        $response->assertResponseStatus(422);
+        $response->seeJsonContains([
+            'error' => 'id',
+            'detail' => $cache['id'],
+        ]);
+        $result = Cache::get(self::SERVICE_LIST_KEY, [$cache]);
+        self::assertCount(1, $result);
+        self::assertContains($cache, $result);
+    }
+
     private function getUrl(): string
     {
         return '/api/microservices';
