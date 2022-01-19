@@ -63,9 +63,9 @@ final class MicroserviceControllerTest extends TestCase
         $response = $this->json('POST', $this->getUrl(), ['id' => $serviceId]);
         $response->assertResponseStatus(422);
         $response->seeJsonContains([
-            'error' => 'url',
-            'detail' => $cache['url'],
+            'message' => 'Microservice Url Already Registered',
         ]);
+
         $result = Cache::get(self::SERVICE_LIST_KEY, [$cache]);
         self::assertCount(1, $result);
         self::assertContains($cache, $result);
@@ -84,9 +84,9 @@ final class MicroserviceControllerTest extends TestCase
         $response = $this->json('POST', $this->getUrl(), ['id' => $serviceId]);
         $response->assertResponseStatus(422);
         $response->seeJsonContains([
-            'error' => 'id',
-            'detail' => $cache['id'],
+            'message' => 'Microservice id Already Registered',
         ]);
+
         $result = Cache::get(self::SERVICE_LIST_KEY, [$cache]);
         self::assertCount(1, $result);
         self::assertContains($cache, $result);

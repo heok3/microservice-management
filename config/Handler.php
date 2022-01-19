@@ -2,6 +2,7 @@
 
 namespace Configuration;
 
+use Configuration\Exception\ApiBadRequestException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
