@@ -19,11 +19,11 @@ class RegisterMicroservice
     {
         $list = $this->cacheRepository->getServiceList();
         if($list->hasId($microservice->getId())) {
-            throw new MicroserviceIdAlreadyRegisteredException($microservice->getId());
+            throw new MicroserviceIdAlreadyRegisteredException();
         }
 
         if($list->hasUrl($microservice->getUrl())) {
-            throw new MicroserviceUrlAlreadyRegisteredException($microservice->getUrl());
+            throw new MicroserviceUrlAlreadyRegisteredException();
         }
 
         $this->cacheRepository->saveMicroservice($microservice);
