@@ -1,6 +1,6 @@
 <?php
 
-/** @var \Laravel\Lumen\Routing\Router $router */
+/** @var Router $router */
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +13,8 @@
 |
 */
 
+use Laravel\Lumen\Routing\Router;
+
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
@@ -20,4 +22,5 @@ $router->get('/', function () use ($router) {
 $router->group(['namespace' => '\Infrastructure\API'], function () use ($router) {
     $router->get('/api/microservices', 'MicroserviceController@index');
     $router->post('/api/microservices', 'MicroserviceController@store');
+    $router->get('/api/microservices/health', 'ReceiveHealthController');
 });

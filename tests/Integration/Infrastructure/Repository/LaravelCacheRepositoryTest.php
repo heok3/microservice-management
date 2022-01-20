@@ -4,6 +4,7 @@ namespace Test\Integration\Infrastructure\Repository;
 
 use Domain\GlobalValues;
 use Domain\Microservice;
+use Domain\Microservices;
 use Illuminate\Support\Facades\Cache;
 use Infrastructure\Repository\LaravelCacheRepository;
 use Test\TestCase;
@@ -23,7 +24,7 @@ final class LaravelCacheRepositoryTest extends TestCase
     {
         $service = [
             'id' => 'server_id',
-            'url' => 'http://localhost:8080',
+            'url' => '111.111.111.1',
             'health-ms' => 0,
         ];
 
@@ -42,7 +43,7 @@ final class LaravelCacheRepositoryTest extends TestCase
     {
         $microservice = new Microservice(
             id: 'service_id',
-            url: 'http://localhost:8080',
+            url: '111.111.111.1',
             healthMs: 0,
         );
 
@@ -60,13 +61,13 @@ final class LaravelCacheRepositoryTest extends TestCase
     {
         $firstService = new Microservice(
             id: 'first_service',
-            url: 'http://localhost:8080',
+            url: '111.111.111.1',
             healthMs: 0,
         );
 
         $secondService = new Microservice(
             id: 'second_service',
-            url: 'http://localhost:8000',
+            url: '111.111.111.2',
             healthMs: 0,
         );
 
@@ -78,4 +79,35 @@ final class LaravelCacheRepositoryTest extends TestCase
         self::assertContains($firstService->toArray(), $result);
         self::assertContains($secondService->toArray(), $result);
     }
+
+    /** @test */
+    public function it_can_update_microservice_list(): void
+    {
+        $oldService = new Microservice(
+            id: 'old_service',
+            url: '111.111.111.111',
+            healthMs: 0,
+        );
+
+        $firstService = new Microservice(
+            id: 'first_service',
+            url: '111.111.111.1',
+            healthMs: 0,
+        );
+
+        $secondService = new Microservice(
+            id: 'second_service',
+            url: '111.111.111.2',
+            healthMs: 0,
+        );
+
+        Cache::put(GlobalValues::SERVICE_LIST_KEY, [$oldService->toArray()]);
+        $repo = new LaravelCacheRepository();
+        $repo->update(Microservices::fromArray([$firstService, $secondService]));
+        $result = Cache::get(GlobalValues::SERVICE_LIST_KEY);
+        self::assertCount(2, $result);
+        self::assertContains($firstService->toArray(), $result);
+        self::assertContains($secondService->toArray(), $result);
+    }
+
 }

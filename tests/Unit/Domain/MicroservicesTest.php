@@ -4,6 +4,7 @@ namespace Test\Unit\Domain;
 
 use Domain\Microservice;
 use Domain\Microservices;
+use Domain\MicroserviceNotFoundException;
 use PHPUnit\Framework\TestCase;
 
 final class MicroservicesTest extends TestCase
@@ -52,4 +53,26 @@ final class MicroservicesTest extends TestCase
         self::assertFalse($microservices->hasUrl($anyUrl));
     }
 
+    /** @test */
+    public function it_can_search_by_url(): void
+    {
+        $microserviceA = new Microservice(
+            id: 'service_a',
+            url: '123.123.123.123',
+            healthMs: 0,
+        );
+
+        $microserviceB = new Microservice(
+            id: 'service_b',
+            url: '222.222.222.222',
+            healthMs: 0,
+        );
+
+        $anyUrl = '111.111.111.111';
+        $microservices = Microservices::fromArray([$microserviceA, $microserviceB]);
+        $microservice = $microservices->searchByUrl($microserviceB->getUrl());
+        self::assertEquals($microserviceB->getUrl(), $microservice->getUrl());
+        self::expectException(MicroserviceNotFoundException::class);
+        self::assertNull($microservices->searchByUrl($anyUrl));
+    }
 }

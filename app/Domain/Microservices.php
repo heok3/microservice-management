@@ -13,9 +13,13 @@ class Microservices extends Collection
 
     public function hasUrl(string $url): bool
     {
-        $result = $this->first(fn(Microservice $microservice) => $microservice->getUrl() === $url);
+        try {
+            $this->searchByUrl($url);
 
-        return !is_null($result);
+            return true;
+        } catch (MicroserviceNotFoundException) {
+            return false;
+        }
     }
 
     public function hasId(string $id): bool
@@ -23,5 +27,26 @@ class Microservices extends Collection
         $result = $this->first(fn(Microservice $microservice) => $microservice->getId() === $id);
 
         return !is_null($result);
+    }
+
+    /**
+     * @param string $url
+     *
+     * @return Microservice
+     *
+     * @throws MicroserviceNotFoundException
+     */
+    public function searchByUrl(string $url): Microservice
+    {
+        $result = $this->first(
+            fn(Microservice $microservice) =>
+                $microservice->getUrl() === $url
+        );
+
+        if(is_null($result)) {
+            throw new MicroserviceNotFoundException('There is no url:' . $url);
+        }
+
+        return $result;
     }
 }

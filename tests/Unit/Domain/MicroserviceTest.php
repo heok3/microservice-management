@@ -21,5 +21,4 @@ final class MicroserviceTest extends TestCase
         self::assertEquals($microservice->getUrl(), $result['url']);
         self::assertEquals($microservice->getHealthMs(), $result['health-ms']);
     }
-
 }

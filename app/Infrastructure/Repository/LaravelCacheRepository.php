@@ -15,7 +15,7 @@ class LaravelCacheRepository implements CacheRepository
     public function getServiceList(): Microservices
     {
         $serviceList = [];
-        if(Cache::has(self::SERVICE_LIST_KEY)) {
+        if (Cache::has(self::SERVICE_LIST_KEY)) {
             $serviceList = Cache::get(self::SERVICE_LIST_KEY);
         }
 
@@ -28,11 +28,21 @@ class LaravelCacheRepository implements CacheRepository
     public function saveMicroservice(Microservice $microservice): void
     {
         $serviceList = [];
-        if(Cache::has(self::SERVICE_LIST_KEY)) {
+        if (Cache::has(self::SERVICE_LIST_KEY)) {
             $serviceList = Cache::get(self::SERVICE_LIST_KEY);
         }
 
         $serviceList[] = $microservice->toArray();
+        Cache::put(self::SERVICE_LIST_KEY, $serviceList);
+    }
+
+    public function update(Microservices $microservices): void
+    {
+        $serviceList = $microservices->map(
+            fn(Microservice $microservice) =>
+            $microservice->toArray()
+        );
+
         Cache::put(self::SERVICE_LIST_KEY, $serviceList);
     }
 }

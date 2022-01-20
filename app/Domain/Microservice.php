@@ -53,4 +53,12 @@ class Microservice
     {
         return $this->healthMs;
     }
+
+    /**
+     * @param int $healthMs
+     */
+    public function setHealthMs(int $healthMs): void
+    {
+        $this->healthMs = $healthMs;
+    }
 }
