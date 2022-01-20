@@ -37,11 +37,13 @@ final class MicroservicesTest extends TestCase
         $microserviceA = new Microservice(
             id: 'service_a',
             url: '123.123.123.123',
+            healthMs: 0,
         );
 
         $microserviceB = new Microservice(
             id: 'service_b',
             url: '222.222.222.222',
+            healthMs: 0,
         );
 
         $anyUrl = '111.111.111.111';

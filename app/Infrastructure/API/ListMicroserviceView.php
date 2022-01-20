@@ -23,6 +23,7 @@ class ListMicroserviceView implements Responsable
             fn(Microservice $microservice) => [
                 'id' => $microservice->getId(),
                 'url' => $microservice->getUrl(),
+                'health-ms' => $microservice->getHealthMs(),
             ]
         )
             ->toArray();

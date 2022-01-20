@@ -33,6 +33,7 @@ class MicroserviceController
             $registerMicroservice->execute(new Microservice(
                 id: $request->input('id'),
                 url: $request->getClientIp(),
+                healthMs: $request->input('health-ms'),
             ));
 
             return new Response([], 204);

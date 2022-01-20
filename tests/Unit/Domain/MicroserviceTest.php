@@ -13,11 +13,13 @@ final class MicroserviceTest extends TestCase
         $microservice = new Microservice(
             id: 'service_id',
             url: 'http://localhost:8080',
+            healthMs: 0,
         );
 
         $result  = $microservice->toArray();
         self::assertEquals($microservice->getId(), $result['id']);
         self::assertEquals($microservice->getUrl(), $result['url']);
+        self::assertEquals($microservice->getHealthMs(), $result['health-ms']);
     }
 
 }

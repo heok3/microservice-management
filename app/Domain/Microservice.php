@@ -7,14 +7,17 @@ class Microservice
     public function __construct(
         private string $id,
         private string $url,
+        private int    $healthMs,
     )
-    {}
+    {
+    }
 
     public static function fromCache(array $microservice): self
     {
         return new self(
             id: $microservice['id'],
             url: $microservice['url'],
+            healthMs: $microservice['health-ms'],
         );
     }
 
@@ -23,6 +26,7 @@ class Microservice
         return [
             'id' => $this->id,
             'url' => $this->url,
+            'health-ms' => $this->healthMs,
         ];
     }
 
@@ -40,5 +44,13 @@ class Microservice
     public function getUrl(): string
     {
         return $this->url;
+    }
+
+    /**
+     * @return int
+     */
+    public function getHealthMs(): int
+    {
+        return $this->healthMs;
     }
 }

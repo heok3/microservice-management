@@ -16,6 +16,7 @@ final class MicroserviceControllerTest extends TestCase
         $service = [
             'id' => 'serviceA',
             'url' => 'http://localhost:8080',
+            'health-ms' => 0,
         ];
 
         Cache::add(self::SERVICE_LIST_KEY, [$service]);
@@ -36,7 +37,11 @@ final class MicroserviceControllerTest extends TestCase
     public function client_can_register_as_a_microservice(): void
     {
         $serviceId = 'service_id';
-        $response = $this->post($this->getUrl(), ['id' => $serviceId]);
+        $response = $this->post($this->getUrl(), [
+            'id' => $serviceId,
+            'health-ms' => 0,
+        ]);
+
         $response->assertResponseStatus(204);
         $result = Cache::get(self::SERVICE_LIST_KEY);
         self::assertCount(1, $result);
@@ -45,6 +50,7 @@ final class MicroserviceControllerTest extends TestCase
             // It's always localhost
             // Go to integration test for different url
             'url' => '127.0.0.1',
+            'health-ms' => 0,
         ];
 
         self::assertContains($expected, $result);
@@ -56,11 +62,16 @@ final class MicroserviceControllerTest extends TestCase
         $cache = [
             'id' => 'first_service',
             'url' => '127.0.0.1',
+            'health-ms' => 0,
         ];
 
         $serviceId = 'service_id';
         Cache::put(self::SERVICE_LIST_KEY, [$cache]);
-        $response = $this->json('POST', $this->getUrl(), ['id' => $serviceId]);
+        $response = $this->json('POST', $this->getUrl(), [
+            'id' => $serviceId,
+            'health-ms' => 0,
+        ]);
+
         $response->assertResponseStatus(422);
         $response->seeJsonContains([
             'message' => 'Microservice Url Already Registered',
@@ -77,11 +88,16 @@ final class MicroserviceControllerTest extends TestCase
         $cache = [
             'id' => 'service_id',
             'url' => '123.123.123.123',
+            'health-ms' => 0,
         ];
 
         $serviceId = 'service_id';
         Cache::put(self::SERVICE_LIST_KEY, [$cache]);
-        $response = $this->json('POST', $this->getUrl(), ['id' => $serviceId]);
+        $response = $this->json('POST', $this->getUrl(), [
+            'id' => $serviceId,
+            'health-ms' => 0,
+        ]);
+
         $response->assertResponseStatus(422);
         $response->seeJsonContains([
             'message' => 'Microservice id Already Registered',

@@ -16,6 +16,7 @@ final class ListMicroserviceViewTest extends TestCase
         $microservice = new Microservice(
             id: 'service_id',
             url: 'http://localhost:8080',
+            healthMs: 0,
         );
 
         $view = new ListMicroserviceView(new Microservices([$microservice]));
@@ -26,5 +27,4 @@ final class ListMicroserviceViewTest extends TestCase
         self::assertEquals($microservice->getId(), $content[0]['id']);
         self::assertEquals($microservice->getUrl(), $content[0]['url']);
     }
-
 }

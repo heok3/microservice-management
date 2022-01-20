@@ -22,6 +22,7 @@ final class MicroserviceControllerTest extends TestCase
         $controller = new Microservicecontroller();
         $data = [
             'id' => $serviceId,
+            'health-ms' => 0,
         ];
 
         $request = Request::create(
@@ -34,6 +35,7 @@ final class MicroserviceControllerTest extends TestCase
         $expectedValue = [
             'id' => $serviceId,
             'url' => self::CLIENT_ADDR,
+            'health-ms' => 0,
         ];
 
         $response = $controller->store($request, new RegisterMicroservice(new LaravelCacheRepository()));
@@ -49,6 +51,7 @@ final class MicroserviceControllerTest extends TestCase
         $firstService = [
             'id' => 'first_service',
             'url' => '111.111.111.111',
+            'health-ms' => 0,
         ];
 
         Cache::put(self::CACHE_KEY_NAME, [$firstService]);
@@ -56,6 +59,7 @@ final class MicroserviceControllerTest extends TestCase
         $controller = new Microservicecontroller();
         $data = [
             'id' => $serviceId,
+            'health-ms' => 0,
         ];
 
         $request = Request::create(
@@ -68,6 +72,7 @@ final class MicroserviceControllerTest extends TestCase
         $expectedValue = [
             'id' => $serviceId,
             'url' => self::CLIENT_ADDR,
+            'health-ms' => 0,
         ];
 
         $response = $controller->store($request, new RegisterMicroservice(new LaravelCacheRepository()));

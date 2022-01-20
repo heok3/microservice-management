@@ -24,6 +24,7 @@ final class LaravelCacheRepositoryTest extends TestCase
         $service = [
             'id' => 'server_id',
             'url' => 'http://localhost:8080',
+            'health-ms' => 0,
         ];
 
         Cache::add(GlobalValues::SERVICE_LIST_KEY, [$service]);
@@ -42,6 +43,7 @@ final class LaravelCacheRepositoryTest extends TestCase
         $microservice = new Microservice(
             id: 'service_id',
             url: 'http://localhost:8080',
+            healthMs: 0,
         );
 
         $repo = new LaravelCacheRepository();
@@ -59,11 +61,13 @@ final class LaravelCacheRepositoryTest extends TestCase
         $firstService = new Microservice(
             id: 'first_service',
             url: 'http://localhost:8080',
+            healthMs: 0,
         );
 
         $secondService = new Microservice(
             id: 'second_service',
             url: 'http://localhost:8000',
+            healthMs: 0,
         );
 
         Cache::put(GlobalValues::SERVICE_LIST_KEY, [$firstService->toArray()]);
