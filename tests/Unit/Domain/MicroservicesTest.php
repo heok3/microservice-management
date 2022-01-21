@@ -2,6 +2,7 @@
 
 namespace Test\Unit\Domain;
 
+use Carbon\Carbon;
 use Domain\Microservice;
 use Domain\Microservices;
 use Domain\MicroserviceNotFoundException;
@@ -9,6 +10,14 @@ use PHPUnit\Framework\TestCase;
 
 final class MicroservicesTest extends TestCase
 {
+    private Carbon $now;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->now = Carbon::now();
+    }
+
     /** @test */
     public function it_can_be_created_if_the_array_has_only_microservice_instance(): void
     {
@@ -39,12 +48,16 @@ final class MicroservicesTest extends TestCase
             id: 'service_a',
             url: '123.123.123.123',
             healthMs: 0,
+            updatedAt: $this->now,
+            createdAt: $this->now,
         );
 
         $microserviceB = new Microservice(
             id: 'service_b',
             url: '222.222.222.222',
             healthMs: 0,
+            updatedAt: $this->now,
+            createdAt: $this->now,
         );
 
         $anyUrl = '111.111.111.111';
@@ -60,12 +73,16 @@ final class MicroservicesTest extends TestCase
             id: 'service_a',
             url: '123.123.123.123',
             healthMs: 0,
+            updatedAt: $this->now,
+            createdAt: $this->now,
         );
 
         $microserviceB = new Microservice(
             id: 'service_b',
             url: '222.222.222.222',
             healthMs: 0,
+            updatedAt: $this->now,
+            createdAt: $this->now,
         );
 
         $anyUrl = '111.111.111.111';

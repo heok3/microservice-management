@@ -2,6 +2,7 @@
 
 namespace Test\Unit\Infrastructure\API;
 
+use Carbon\Carbon;
 use Domain\Microservice;
 use Domain\Microservices;
 use Illuminate\Http\Request;
@@ -17,6 +18,8 @@ final class ListMicroserviceViewTest extends TestCase
             id: 'service_id',
             url: 'http://localhost:8080',
             healthMs: 0,
+            updatedAt: Carbon::now(),
+            createdAt: Carbon::now(),
         );
 
         $view = new ListMicroserviceView(new Microservices([$microservice]));

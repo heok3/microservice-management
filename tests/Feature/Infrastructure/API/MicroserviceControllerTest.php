@@ -2,6 +2,7 @@
 
 namespace Test\Feature\Infrastructure\API;
 
+use Carbon\Carbon;
 use Domain\GlobalValues;
 use Illuminate\Support\Facades\Cache;
 use Test\TestCase;
@@ -9,20 +10,36 @@ use Test\TestCase;
 final class MicroserviceControllerTest extends TestCase
 {
     private const SERVICE_LIST_KEY = GlobalValues::SERVICE_LIST_KEY;
+    private Carbon $now;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->now = Carbon::now();
+        Carbon::setTestNow($this->now);
+    }
+
 
     /** @test */
     public function user_can_get_service_list(): void
     {
         $service = [
             'id' => 'serviceA',
-            'url' => 'http://localhost:8080',
-            'health-ms' => 0,
+            'url' => '123.0.0.123:8080',
+            'health_ms' => 0,
+            'updated_at' => $this->now->timestamp,
+            'created_at' => $this->now->timestamp,
         ];
 
         Cache::add(self::SERVICE_LIST_KEY, [$service]);
         $response = self::get($this->getUrl());
         $response->assertResponseOk();
-        $response->seeJsonEquals([$service]);
+        $response->seeJsonEquals([
+            [
+                'id' => $service['id'],
+                'url' => $service['url'],
+            ]
+        ]);
     }
 
     /** @test */
@@ -39,7 +56,7 @@ final class MicroserviceControllerTest extends TestCase
         $serviceId = 'service_id';
         $response = $this->post($this->getUrl(), [
             'id' => $serviceId,
-            'health-ms' => 0,
+            'health_ms' => 0,
         ]);
 
         $response->assertResponseStatus(204);
@@ -50,7 +67,9 @@ final class MicroserviceControllerTest extends TestCase
             // It's always localhost
             // Go to integration test for different url
             'url' => '127.0.0.1',
-            'health-ms' => 0,
+            'health_ms' => 0,
+            'updated_at' => $this->now->timestamp,
+            'created_at' => $this->now->timestamp,
         ];
 
         self::assertContains($expected, $result);
@@ -62,14 +81,16 @@ final class MicroserviceControllerTest extends TestCase
         $cache = [
             'id' => 'first_service',
             'url' => '127.0.0.1',
-            'health-ms' => 0,
+            'health_ms' => 0,
+            'updated_at' => $this->now->timestamp,
+            'created_at' => $this->now->timestamp,
         ];
 
         $serviceId = 'service_id';
         Cache::put(self::SERVICE_LIST_KEY, [$cache]);
         $response = $this->json('POST', $this->getUrl(), [
             'id' => $serviceId,
-            'health-ms' => 0,
+            'health_ms' => 0,
         ]);
 
         $response->assertResponseStatus(422);
@@ -88,14 +109,16 @@ final class MicroserviceControllerTest extends TestCase
         $cache = [
             'id' => 'service_id',
             'url' => '123.123.123.123',
-            'health-ms' => 0,
+            'health_ms' => 0,
+            'updated_at' => $this->now->timestamp,
+            'created_at' => $this->now->timestamp,
         ];
 
         $serviceId = 'service_id';
         Cache::put(self::SERVICE_LIST_KEY, [$cache]);
         $response = $this->json('POST', $this->getUrl(), [
             'id' => $serviceId,
-            'health-ms' => 0,
+            'health_ms' => 0,
         ]);
 
         $response->assertResponseStatus(422);

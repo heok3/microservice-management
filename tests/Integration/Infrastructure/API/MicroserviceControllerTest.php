@@ -3,6 +3,7 @@
 namespace Test\Integration\Infrastructure\API;
 
 use Application\RegisterMicroservice;
+use Carbon\Carbon;
 use Domain\GlobalValues;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -14,6 +15,14 @@ final class MicroserviceControllerTest extends TestCase
 {
     private const CLIENT_ADDR = '10.1.0.1';
     private const CACHE_KEY_NAME = GlobalValues::SERVICE_LIST_KEY;
+    private Carbon $now;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->now = Carbon::now();
+        Carbon::setTestNow($this->now);
+    }
 
     /** @test */
     public function it_must_register_a_first_microservice_with_client_ip(): void
@@ -22,7 +31,7 @@ final class MicroserviceControllerTest extends TestCase
         $controller = new Microservicecontroller();
         $data = [
             'id' => $serviceId,
-            'health-ms' => 0,
+            'health_ms' => 0,
         ];
 
         $request = Request::create(
@@ -35,7 +44,9 @@ final class MicroserviceControllerTest extends TestCase
         $expectedValue = [
             'id' => $serviceId,
             'url' => self::CLIENT_ADDR,
-            'health-ms' => 0,
+            'health_ms' => 0,
+            'updated_at' => $this->now->timestamp,
+            'created_at' => $this->now->timestamp,
         ];
 
         $response = $controller->store($request, new RegisterMicroservice(new LaravelCacheRepository()));
@@ -51,7 +62,9 @@ final class MicroserviceControllerTest extends TestCase
         $firstService = [
             'id' => 'first_service',
             'url' => '111.111.111.111',
-            'health-ms' => 0,
+            'health_ms' => 0,
+            'updated_at' => $this->now->timestamp,
+            'created_at' => $this->now->timestamp,
         ];
 
         Cache::put(self::CACHE_KEY_NAME, [$firstService]);
@@ -59,7 +72,7 @@ final class MicroserviceControllerTest extends TestCase
         $controller = new Microservicecontroller();
         $data = [
             'id' => $serviceId,
-            'health-ms' => 0,
+            'health_ms' => 0,
         ];
 
         $request = Request::create(
@@ -72,7 +85,9 @@ final class MicroserviceControllerTest extends TestCase
         $expectedValue = [
             'id' => $serviceId,
             'url' => self::CLIENT_ADDR,
-            'health-ms' => 0,
+            'health_ms' => 0,
+            'updated_at' => $this->now->timestamp,
+            'created_at' => $this->now->timestamp,
         ];
 
         $response = $controller->store($request, new RegisterMicroservice(new LaravelCacheRepository()));

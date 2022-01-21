@@ -2,12 +2,16 @@
 
 namespace Domain;
 
+use Carbon\Carbon;
+
 class Microservice
 {
     public function __construct(
         private string $id,
         private string $url,
         private int    $healthMs,
+        private Carbon $updatedAt,
+        private Carbon $createdAt,
     )
     {
     }
@@ -17,7 +21,9 @@ class Microservice
         return new self(
             id: $microservice['id'],
             url: $microservice['url'],
-            healthMs: $microservice['health-ms'],
+            healthMs: $microservice['health_ms'],
+            updatedAt: Carbon::createFromTimestamp($microservice['updated_at']),
+            createdAt: Carbon::createFromTimestamp($microservice['created_at']),
         );
     }
 
@@ -26,7 +32,9 @@ class Microservice
         return [
             'id' => $this->id,
             'url' => $this->url,
-            'health-ms' => $this->healthMs,
+            'health_ms' => $this->healthMs,
+            'updated_at' => $this->updatedAt->timestamp,
+            'created_at' => $this->createdAt->timestamp,
         ];
     }
 
@@ -55,10 +63,27 @@ class Microservice
     }
 
     /**
+     * @return Carbon
+     */
+    public function getCreatedAt(): Carbon
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @return Carbon
+     */
+    public function getUpdatedAt(): Carbon
+    {
+        return $this->updatedAt;
+    }
+
+    /**
      * @param int $healthMs
      */
     public function setHealthMs(int $healthMs): void
     {
         $this->healthMs = $healthMs;
+        $this->updatedAt = Carbon::now();
     }
 }

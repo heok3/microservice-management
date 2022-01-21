@@ -6,6 +6,7 @@ use Application\ListMicroservice;
 use Application\MicroserviceIdAlreadyRegisteredException;
 use Application\MicroserviceUrlAlreadyRegisteredException;
 use Application\RegisterMicroservice;
+use Carbon\Carbon;
 use Configuration\Exception\ApiBadRequestException;
 use Configuration\Exception\ApiDuplicatedEntityException;
 use Domain\Microservice;
@@ -33,7 +34,9 @@ class MicroserviceController
             $registerMicroservice->execute(new Microservice(
                 id: $request->input('id'),
                 url: $request->getClientIp(),
-                healthMs: $request->input('health-ms'),
+                healthMs: $request->input('health_ms'),
+                updatedAt: Carbon::now(),
+                createdAt: Carbon::now(),
             ));
 
             return new Response([], 204);

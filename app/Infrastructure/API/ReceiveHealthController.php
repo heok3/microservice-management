@@ -23,7 +23,7 @@ class ReceiveHealthController
         try {
             $updateServiceHealth->execute(
                 url: $request->getClientIp(),
-                healthMs: $request->input('health-ms')
+                healthMs: $request->input('health_ms')
             );
 
             return new Response([], 204);

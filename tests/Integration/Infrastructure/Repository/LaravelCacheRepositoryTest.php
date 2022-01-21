@@ -2,6 +2,7 @@
 
 namespace Test\Integration\Infrastructure\Repository;
 
+use Carbon\Carbon;
 use Domain\GlobalValues;
 use Domain\Microservice;
 use Domain\Microservices;
@@ -11,6 +12,15 @@ use Test\TestCase;
 
 final class LaravelCacheRepositoryTest extends TestCase
 {
+    private Carbon $now;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->now = Carbon::now();
+        Carbon::setTestNow($this->now);
+    }
+
     /** @test */
     public function it_can_return_empty_list(): void
     {
@@ -25,7 +35,9 @@ final class LaravelCacheRepositoryTest extends TestCase
         $service = [
             'id' => 'server_id',
             'url' => '111.111.111.1',
-            'health-ms' => 0,
+            'health_ms' => 0,
+            'updated_at' => $this->now->timestamp,
+            'created_at' => $this->now->timestamp,
         ];
 
         Cache::add(GlobalValues::SERVICE_LIST_KEY, [$service]);
@@ -45,6 +57,8 @@ final class LaravelCacheRepositoryTest extends TestCase
             id: 'service_id',
             url: '111.111.111.1',
             healthMs: 0,
+            updatedAt: $this->now,
+            createdAt: $this->now,
         );
 
         $repo = new LaravelCacheRepository();
@@ -63,12 +77,16 @@ final class LaravelCacheRepositoryTest extends TestCase
             id: 'first_service',
             url: '111.111.111.1',
             healthMs: 0,
+            updatedAt: $this->now,
+            createdAt: $this->now,
         );
 
         $secondService = new Microservice(
             id: 'second_service',
             url: '111.111.111.2',
             healthMs: 0,
+            updatedAt: $this->now,
+            createdAt: $this->now,
         );
 
         Cache::put(GlobalValues::SERVICE_LIST_KEY, [$firstService->toArray()]);
@@ -87,18 +105,24 @@ final class LaravelCacheRepositoryTest extends TestCase
             id: 'old_service',
             url: '111.111.111.111',
             healthMs: 0,
+            updatedAt: $this->now,
+            createdAt: $this->now,
         );
 
         $firstService = new Microservice(
             id: 'first_service',
             url: '111.111.111.1',
             healthMs: 0,
+            updatedAt: $this->now,
+            createdAt: $this->now,
         );
 
         $secondService = new Microservice(
             id: 'second_service',
             url: '111.111.111.2',
             healthMs: 0,
+            updatedAt: $this->now,
+            createdAt: $this->now,
         );
 
         Cache::put(GlobalValues::SERVICE_LIST_KEY, [$oldService->toArray()]);
@@ -109,5 +133,4 @@ final class LaravelCacheRepositoryTest extends TestCase
         self::assertContains($firstService->toArray(), $result);
         self::assertContains($secondService->toArray(), $result);
     }
-
 }
