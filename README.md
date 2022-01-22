@@ -6,9 +6,9 @@ It will monitor microservices list/health and provide it to gateway-service.
 ## Details
 
 1. Microservices can be registered
-2. User can monitor registered microservices health
-3. Gateway service can get a list of registered services
-4. Security/Whitelist(url)
+2. Gateway service can get a list of registered services
+3. User can monitor registered microservices health - WIP
+4. Security/Whitelist(url) - WIP
 
 ## Purpose
 
